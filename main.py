@@ -4,6 +4,7 @@ No scheduled or proximity-triggered locking is enabled by this application.
 """
 
 import hmac
+import logging
 import os
 
 from flask import Flask, jsonify, request
@@ -76,7 +77,8 @@ def auth_status():
         return jsonify({"status": "authenticated"})
     except AuthenticationError:
         return jsonify({"error": "Kia authentication failed"}), 401
-    except Exception:
+    except Exception as exc:
+        logging.warning("kia_auth_failure_exception_type=%s", type(exc).__name__)
         return jsonify({"error": "Kia service unavailable"}), 502
 
 
